@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserDTO user) {
         var entity = userMapper.toEntity(user);
         var saved = userRepository.save(entity);
-        saved.setEmail(saved.getEmail().replace(".", "+"));
         return userMapper.toDTO(saved);
     }
 }
