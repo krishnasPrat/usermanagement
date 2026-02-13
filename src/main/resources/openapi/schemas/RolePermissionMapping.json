@@ -1,0 +1,26 @@
+{
+  "title": "RolePermissionMapping",
+  "type": "object",
+  "properties": {
+    "roleId": {
+      "type": "integer",
+      "format": "int64",
+      "nullable": true,
+      "readOnly": true
+    },
+    "permissionId": {
+      "type": "integer",
+      "format": "int64",
+      "nullable": true,
+      "readOnly": true
+    },
+    "roleName": {
+      "type": "string",
+      "nullable": true
+    },
+    "permissionName": {
+      "type": "string",
+      "nullable": true
+    }
+  }
+}

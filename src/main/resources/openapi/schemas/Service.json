@@ -1,0 +1,38 @@
+{
+  "title": "Service",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int64",
+      "nullable": true,
+      "readOnly": true
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "nullable": true
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "$ref": "./Role.json"
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "$ref": "./Permission.json"
+      }
+    },
+    "rolePermissionMappings": {
+      "type": "array",
+      "items": {
+        "$ref": "./RolePermissionMapping.json"
+      }
+    }
+  },
+  "required": ["name"]
+}
