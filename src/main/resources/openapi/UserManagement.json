@@ -90,6 +90,33 @@
           }
         }
       }
+    },
+    "/subscription-user": {
+      "post": {
+        "summary": "Create subscription user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/SubscriptionUser.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/SubscriptionUser.json"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -102,6 +129,9 @@
       },
       "Subscription": {
         "$ref": "./schemas/Subscription.json"
+      },
+      "SubscriptionUser": {
+        "$ref": "./schemas/SubscriptionUser.json"
       },
       "Role": {
         "$ref": "./schemas/Role.json"

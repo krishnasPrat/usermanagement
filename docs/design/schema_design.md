@@ -17,8 +17,7 @@ flowchart LR
   U --> SU
   R --> SU
 
-  SU --> SP[SpecialPermissions]
-  P --> SP
+  SU --> PL[PermissionIds List]
 ```
 
 ## EER Diagram
@@ -56,19 +55,17 @@ erDiagram
 
   SUBSCRIPTIONS {
     uuid id PK
-    uuid owner_user_id FK
+    uuid user_id FK
     uuid service_id FK
   }
 
   SUBSCRIPTION_USERS {
+    uuid id PK
     uuid subscription_id FK
     uuid user_id FK
     uuid role_id FK
-  }
-
-  SPECIAL_PERMISSIONS {
-    uuid subscription_user_id FK
-    uuid permission_id FK
+    string status
+    text specialPermissionList
   }
 
   USERS ||--o{ SUBSCRIPTIONS : owns
@@ -83,9 +80,6 @@ erDiagram
   SUBSCRIPTIONS ||--o{ SUBSCRIPTION_USERS : assigns
   USERS ||--o{ SUBSCRIPTION_USERS : member
   ROLES ||--o{ SUBSCRIPTION_USERS : role_per_service
-
-  SUBSCRIPTION_USERS ||--o{ SPECIAL_PERMISSIONS : exceptions
-  PERMISSIONS ||--o{ SPECIAL_PERMISSIONS : granted_direct
 ```
 
 ## Sample Data (Illustrative)
@@ -94,7 +88,7 @@ erDiagram
 
 | id | name | email | title |
 | --- | --- | --- | --- |
-| u_krishna | Umesh | umesh@company.com | CTO |
+| u_umesh | Umesh | umesh@company.com | CTO |
 | u_shyam | Shyam | shyam@company.com | Team Lead |
 | u_raju | Raju | raju@company.com | Junior Dev |
 
@@ -119,13 +113,13 @@ erDiagram
 
 | id | service_id | name |
 | --- | --- | --- |
-| perm_ec2_start | svc_ec2 | start_instance |
-| perm_ec2_stop | svc_ec2 | stop_instance |
-| perm_ec2_sudo | svc_ec2 | sudo_access |
-| perm_cass_create_schema | svc_cassandra | create_schema |
-| perm_cass_drop_schema | svc_cassandra | drop_schema |
-| perm_cass_create_table | svc_cassandra | create_table |
-| perm_cass_drop_table | svc_cassandra | drop_table |
+| perm_ec2_start | svc_ec2 | START_INSTANCE |
+| perm_ec2_stop | svc_ec2 | STOP_INSTANCE |
+| perm_ec2_sudo | svc_ec2 | SUDO_ACCESS |
+| perm_cass_create_schema | svc_cassandra | CREATE_SCHEMA |
+| perm_cass_drop_schema | svc_cassandra | DROP_SCHEMA |
+| perm_cass_create_table | svc_cassandra | CREATE_TABLE |
+| perm_cass_drop_table | svc_cassandra | DROP_TABLE |
 | perm_cass_dml | svc_cassandra | DML |
 | perm_cass_dql | svc_cassandra | DQL |
 
@@ -149,22 +143,15 @@ erDiagram
 
 **Subscriptions**
 
-| id | owner_user_id | service_id |
+| id | user_id | service_id |
 | --- | --- | --- |
-| sub_ec2_krishna | u_krishna | svc_ec2 |
-| sub_cass_krishna | u_krishna | svc_cassandra |
+| sub_ec2_umesh | u_umesh | svc_ec2 |
+| sub_cass_umesh | u_umesh | svc_cassandra |
 
 **Subscription Users**
 
-| id | subscription_id | user_id | role_id |
-| --- | --- | --- | --- |
-| subu_shyam_ec2 | sub_ec2_krishna | u_shyam | role_ec2_admin |
-| subu_shyam_cass | sub_cass_krishna | u_shyam | role_cass_user |
-| subu_raju_ec2 | sub_ec2_krishna | u_raju | role_ec2_user |
-
-**Special Permissions**
-
-| subscription_user_id | permission_id |
-| --- | --- |
-| subu_raju_ec2 | perm_ec2_start |
-| subu_raju_ec2 | perm_ec2_stop |
+| id | subscription_id | user_id | role_id | specialPermissionList |
+| --- | --- | --- | --- | --- |
+| subu_shyam_ec2 | sub_ec2_umesh | u_shyam | role_ec2_admin | [] |
+| subu_shyam_cass | sub_cass_umesh | u_shyam | role_cass_user | [] |
+| subu_raju_ec2 | sub_ec2_umesh | u_raju | role_ec2_user | [perm_ec2_start, perm_ec2_stop] |

@@ -12,6 +12,12 @@
         "email": "shyam@company.com",
         "title": "Team Lead",
         "status": "ACTIVE"
+      },
+      "Raju": {
+        "name": "Raju",
+        "email": "raju@company.com",
+        "title": "Junior Dev",
+        "status": "ACTIVE"
       }
     }
   },
@@ -21,51 +27,128 @@
         "name": "EC2",
         "status": "ACTIVE",
         "roles": [
-          { "name": "ADMIN", "description": "Full EC2 admin access" },
-          { "name": "USER", "description": "Limited EC2 access" }
+          {
+            "name": "ADMIN",
+            "description": "Full EC2 admin access"
+          },
+          {
+            "name": "USER",
+            "description": "Limited EC2 access"
+          }
         ],
         "permissions": [
-          { "name": "START_INSTANCE", "description": "Start EC2 instance" },
-          { "name": "STOP_INSTANCE", "description": "Stop EC2 instance" },
-          { "name": "SUDO_ACCESS", "description": "Privileged EC2 actions" }
+          {
+            "name": "START_INSTANCE",
+            "description": "Start EC2 instance"
+          },
+          {
+            "name": "STOP_INSTANCE",
+            "description": "Stop EC2 instance"
+          },
+          {
+            "name": "SUDO_ACCESS",
+            "description": "Privileged EC2 actions"
+          }
         ],
         "rolePermissionMappings": [
-          { "roleName": "ADMIN", "permissionName": "START_INSTANCE" },
-          { "roleName": "ADMIN", "permissionName": "STOP_INSTANCE" },
-          { "roleName": "ADMIN", "permissionName": "SUDO_ACCESS" },
-          { "roleName": "USER", "permissionName": "START_INSTANCE" },
-          { "roleName": "USER", "permissionName": "STOP_INSTANCE" }
+          {
+            "roleName": "ADMIN",
+            "permissionName": "START_INSTANCE"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "STOP_INSTANCE"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "SUDO_ACCESS"
+          },
+          {
+            "roleName": "USER",
+            "permissionName": "START_INSTANCE"
+          },
+          {
+            "roleName": "USER",
+            "permissionName": "STOP_INSTANCE"
+          }
         ]
       },
       "Cassandra": {
         "name": "Cassandra",
         "status": "ACTIVE",
         "roles": [
-          { "name": "ADMIN", "description": "Full Cassandra admin access" },
-          { "name": "USER", "description": "Cassandra DML/DQL only" }
+          {
+            "name": "ADMIN",
+            "description": "Full Cassandra admin access"
+          },
+          {
+            "name": "USER",
+            "description": "Cassandra DML/DQL only"
+          }
         ],
         "permissions": [
-          { "name": "CREATE_SCHEMA", "description": "Create keyspace/schema" },
-          { "name": "DROP_SCHEMA", "description": "Drop keyspace/schema" },
-          { "name": "CREATE_TABLE", "description": "Create table" },
-          { "name": "DROP_TABLE", "description": "Drop table" },
-          { "name": "DML", "description": "Data manipulation" },
-          { "name": "DQL", "description": "Data query" }
+          {
+            "name": "CREATE_SCHEMA",
+            "description": "Create keyspace/schema"
+          },
+          {
+            "name": "DROP_SCHEMA",
+            "description": "Drop keyspace/schema"
+          },
+          {
+            "name": "CREATE_TABLE",
+            "description": "Create table"
+          },
+          {
+            "name": "DROP_TABLE",
+            "description": "Drop table"
+          },
+          {
+            "name": "DML",
+            "description": "Data manipulation"
+          },
+          {
+            "name": "DQL",
+            "description": "Data query"
+          }
         ],
         "rolePermissionMappings": [
-          { "roleName": "ADMIN", "permissionName": "CREATE_SCHEMA" },
-          { "roleName": "ADMIN", "permissionName": "DROP_SCHEMA" },
-          { "roleName": "ADMIN", "permissionName": "CREATE_TABLE" },
-          { "roleName": "ADMIN", "permissionName": "DROP_TABLE" },
-          { "roleName": "ADMIN", "permissionName": "DML" },
-          { "roleName": "ADMIN", "permissionName": "DQL" },
-          { "roleName": "USER", "permissionName": "DML" },
-          { "roleName": "USER", "permissionName": "DQL" }
+          {
+            "roleName": "ADMIN",
+            "permissionName": "CREATE_SCHEMA"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "DROP_SCHEMA"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "CREATE_TABLE"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "DROP_TABLE"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "DML"
+          },
+          {
+            "roleName": "ADMIN",
+            "permissionName": "DQL"
+          },
+          {
+            "roleName": "USER",
+            "permissionName": "DML"
+          },
+          {
+            "roleName": "USER",
+            "permissionName": "DQL"
+          }
         ]
       }
     }
-  }
-  ,
+  },
   "subscription": {
     "createSubscription": {
       "Umesh-EC2": {
@@ -77,6 +160,34 @@
         "userId": 1,
         "serviceId": 2,
         "status": "ACTIVE"
+      }
+    }
+  },
+  "subscriptionUser": {
+    "createSubscriptionUser": {
+      "Shyam-EC2-Admin": {
+        "subscriptionId": 1,
+        "userId": 2,
+        "roleId": 1,
+        "status": "ACTIVE",
+        "specialPermissionList": []
+      },
+      "Shyam-Cassandra-User": {
+        "subscriptionId": 2,
+        "userId": 2,
+        "roleId": 4,
+        "status": "ACTIVE",
+        "specialPermissionList": []
+      },
+      "Raju-EC2-User-Special": {
+        "subscriptionId": 1,
+        "userId": 3,
+        "roleId": 2,
+        "status": "ACTIVE",
+        "specialPermissionList": [
+          1,
+          2
+        ]
       }
     }
   }

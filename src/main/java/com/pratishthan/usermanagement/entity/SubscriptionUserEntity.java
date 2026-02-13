@@ -1,12 +1,14 @@
 package com.pratishthan.usermanagement.entity;
 
+import com.pratishthan.usermanagement.converter.LongListJsonConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +32,11 @@ public class SubscriptionUserEntity {
     private Long roleId;
 
     private String status;
+
+
+    @Convert(converter = LongListJsonConverter.class)
+    @Column(name = "special_permission_list", columnDefinition = "text")
+    private List<Long> specialPermissionList;
 
     public Long getId() {
         return id;
@@ -69,5 +76,13 @@ public class SubscriptionUserEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Long> getSpecialPermissionList() {
+        return specialPermissionList;
+    }
+
+    public void setSpecialPermissionList(List<Long> specialPermissionList) {
+        this.specialPermissionList = specialPermissionList;
     }
 }
