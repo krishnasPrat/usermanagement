@@ -63,6 +63,55 @@
           }
         }
       }
+    },
+    "/subscription": {
+      "post": {
+        "summary": "Create subscription",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/Subscription.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/Subscription.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "$ref": "./schemas/User.json"
+      },
+      "Service": {
+        "$ref": "./schemas/Service.json"
+      },
+      "Subscription": {
+        "$ref": "./schemas/Subscription.json"
+      },
+      "Role": {
+        "$ref": "./schemas/Role.json"
+      },
+      "Permission": {
+        "$ref": "./schemas/Permission.json"
+      },
+      "RolePermissionMapping": {
+        "$ref": "./schemas/RolePermissionMapping.json"
+      }
     }
   }
 }

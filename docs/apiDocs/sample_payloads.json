@@ -65,4 +65,19 @@
       }
     }
   }
+  ,
+  "subscription": {
+    "createSubscription": {
+      "Umesh-EC2": {
+        "userId": 1,
+        "serviceId": 1,
+        "status": "ACTIVE"
+      },
+      "Umesh-Cassandra": {
+        "userId": 1,
+        "serviceId": 2,
+        "status": "ACTIVE"
+      }
+    }
+  }
 }

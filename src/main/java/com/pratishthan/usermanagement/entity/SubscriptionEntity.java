@@ -20,8 +20,8 @@ public class SubscriptionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "owner_user_id", nullable = false)
-    private Long ownerUserId;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "service_id", nullable = false)
     private Long serviceId;
@@ -36,12 +36,12 @@ public class SubscriptionEntity {
         this.id = id;
     }
 
-    public Long getOwnerUserId() {
-        return ownerUserId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOwnerUserId(Long ownerUserId) {
-        this.ownerUserId = ownerUserId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getServiceId() {
