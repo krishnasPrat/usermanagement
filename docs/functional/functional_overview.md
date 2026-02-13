@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-  A["Owner User (Krishna)"] --> B["Subscribe to Service"]
+  A["Owner User (Umesh)"] --> B["Subscribe to Service"]
   B --> C[Subscription]
   C --> D[Add Sub-User]
   D --> E[Assign Role]
@@ -15,7 +15,7 @@ flowchart LR
   H --> I[Service Actions Allowed]
 ```
 
-## Example (Krishna, Shyam, Raju)
+## Example (Umesh, Shyam, Raju)
 
 ```mermaid
 flowchart TB
@@ -32,7 +32,7 @@ flowchart TB
     role_user --> perm_stop
   end
 
-  krishna["Krishna (Owner)"] --> sub_ec2["Subscription: EC2"]
+  umesh["Umesh (Owner)"] --> sub_ec2["Subscription: EC2"]
   sub_ec2 --> shyam[Shyam]
   sub_ec2 --> raju[Raju]
   shyam --> role_admin

@@ -94,7 +94,7 @@ erDiagram
 
 | id | name | email | title |
 | --- | --- | --- | --- |
-| u_krishna | Krishna | krishna@company.com | CTO |
+| u_krishna | Umesh | umesh@company.com | CTO |
 | u_shyam | Shyam | shyam@company.com | Team Lead |
 | u_raju | Raju | raju@company.com | Junior Dev |
 

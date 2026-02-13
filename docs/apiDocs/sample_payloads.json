@@ -1,0 +1,68 @@
+{
+  "user": {
+    "createUser": {
+      "Umesh": {
+        "name": "Umesh",
+        "email": "umesh@company.com",
+        "title": "CTO",
+        "status": "ACTIVE"
+      },
+      "Shyam": {
+        "name": "Shyam",
+        "email": "shyam@company.com",
+        "title": "Team Lead",
+        "status": "ACTIVE"
+      }
+    }
+  },
+  "service": {
+    "createService": {
+      "EC2": {
+        "name": "EC2",
+        "status": "ACTIVE",
+        "roles": [
+          { "name": "ADMIN", "description": "Full EC2 admin access" },
+          { "name": "USER", "description": "Limited EC2 access" }
+        ],
+        "permissions": [
+          { "name": "START_INSTANCE", "description": "Start EC2 instance" },
+          { "name": "STOP_INSTANCE", "description": "Stop EC2 instance" },
+          { "name": "SUDO_ACCESS", "description": "Privileged EC2 actions" }
+        ],
+        "rolePermissionMappings": [
+          { "roleName": "ADMIN", "permissionName": "START_INSTANCE" },
+          { "roleName": "ADMIN", "permissionName": "STOP_INSTANCE" },
+          { "roleName": "ADMIN", "permissionName": "SUDO_ACCESS" },
+          { "roleName": "USER", "permissionName": "START_INSTANCE" },
+          { "roleName": "USER", "permissionName": "STOP_INSTANCE" }
+        ]
+      },
+      "Cassandra": {
+        "name": "Cassandra",
+        "status": "ACTIVE",
+        "roles": [
+          { "name": "ADMIN", "description": "Full Cassandra admin access" },
+          { "name": "USER", "description": "Cassandra DML/DQL only" }
+        ],
+        "permissions": [
+          { "name": "CREATE_SCHEMA", "description": "Create keyspace/schema" },
+          { "name": "DROP_SCHEMA", "description": "Drop keyspace/schema" },
+          { "name": "CREATE_TABLE", "description": "Create table" },
+          { "name": "DROP_TABLE", "description": "Drop table" },
+          { "name": "DML", "description": "Data manipulation" },
+          { "name": "DQL", "description": "Data query" }
+        ],
+        "rolePermissionMappings": [
+          { "roleName": "ADMIN", "permissionName": "CREATE_SCHEMA" },
+          { "roleName": "ADMIN", "permissionName": "DROP_SCHEMA" },
+          { "roleName": "ADMIN", "permissionName": "CREATE_TABLE" },
+          { "roleName": "ADMIN", "permissionName": "DROP_TABLE" },
+          { "roleName": "ADMIN", "permissionName": "DML" },
+          { "roleName": "ADMIN", "permissionName": "DQL" },
+          { "roleName": "USER", "permissionName": "DML" },
+          { "roleName": "USER", "permissionName": "DQL" }
+        ]
+      }
+    }
+  }
+}
