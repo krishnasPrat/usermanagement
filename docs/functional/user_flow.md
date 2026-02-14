@@ -103,6 +103,7 @@ flowchart TB
   sub_cass --> shyam["Shyam"]
 
   shyam --> cass_user
+  shyam --> deny_drop["Deny: DROP_SCHEMA"]
 ```
 
 ## Example (Umesh, Shyam, Raju) - Full (Top to Bottom)
@@ -152,6 +153,7 @@ flowchart TB
 
   shyam --> ec2_admin
   shyam --> cass_user
+  shyam --> deny_drop["Deny: DROP_SCHEMA"]
 
   raju --> ec2_user
   raju --> sp_start["Special: START_INSTANCE"]

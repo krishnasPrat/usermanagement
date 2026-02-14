@@ -24,17 +24,10 @@
       "type": "string",
       "nullable": true
     },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "nullable": true,
-      "readOnly": true
-    },
-    "specialPermissionList": {
+    "specialPermissions": {
       "type": "array",
       "items": {
-        "type": "integer",
-        "format": "int64"
+        "$ref": "./SpecialPermission.json"
       },
       "nullable": true
     }

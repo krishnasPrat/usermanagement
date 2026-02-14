@@ -2,11 +2,12 @@ package com.pratishthan.usermanagement.service.impl;
 
 import com.pratishthan.usermanagement.dto.PermissionDTO;
 import com.pratishthan.usermanagement.dto.PermissionListDTO;
-import com.pratishthan.usermanagement.dto.PermissionUpdateDTO;
+import com.pratishthan.usermanagement.dto.SpecialPermissionDTO;
 import com.pratishthan.usermanagement.dto.SubscriptionUserDTO;
 import com.pratishthan.usermanagement.entity.PermissionEntity;
 import com.pratishthan.usermanagement.entity.RoleEntity;
 import com.pratishthan.usermanagement.entity.ServiceRolePermissionEntity;
+import com.pratishthan.usermanagement.entity.SpecialPermissionEntity;
 import com.pratishthan.usermanagement.entity.SubscriptionEntity;
 import com.pratishthan.usermanagement.entity.SubscriptionUserEntity;
 import com.pratishthan.usermanagement.mapper.PermissionMapper;
@@ -17,12 +18,11 @@ import com.pratishthan.usermanagement.repository.SubscriptionRepository;
 import com.pratishthan.usermanagement.repository.SubscriptionUserRepository;
 import com.pratishthan.usermanagement.repository.UserRepository;
 import com.pratishthan.usermanagement.service.SubscriptionUserService;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -69,25 +69,25 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
             throw new IllegalArgumentException("RoleEntity does not belong to the subscription service");
         }
 
-        List<Long> validatedPermissions = validatePermissions(subscription, subscriptionUser.specialPermissionList());
+        Set<Long> defaultPermissions = loadDefaultPermissions(role.getId());
 
         SubscriptionUserEntity entity = new SubscriptionUserEntity();
         entity.setSubscriptionId(subscriptionUser.subscriptionId());
         entity.setUserId(subscriptionUser.userId());
         entity.setRoleId(subscriptionUser.roleId());
         entity.setStatus(subscriptionUser.status());
-        entity.setSpecialPermissionList(validatedPermissions);
+
+        List<SpecialPermissionEntity> specialPermissions = applySpecialPermissionUpserts(
+                subscription,
+                defaultPermissions,
+                new ArrayList<>(),
+                subscriptionUser.specialPermissions()
+        );
+        entity.setSpecialPermissions(specialPermissions);
 
         SubscriptionUserEntity saved = subscriptionUserRepository.save(entity);
 
-        return new SubscriptionUserDTO(
-                saved.getId(),
-                saved.getSubscriptionId(),
-                saved.getUserId(),
-                saved.getRoleId(),
-                saved.getStatus(),
-                saved.getSpecialPermissionList()
-        );
+        return toDTO(saved);
     }
 
     @Override
@@ -102,8 +102,19 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         for (ServiceRolePermissionEntity mapping : defaults) {
             permissionIds.add(mapping.getPermissionId());
         }
-        if (subscriptionUser.getSpecialPermissionList() != null) {
-            permissionIds.addAll(subscriptionUser.getSpecialPermissionList());
+
+        if (subscriptionUser.getSpecialPermissions() != null) {
+            for (SpecialPermissionEntity sp : subscriptionUser.getSpecialPermissions()) {
+                if (sp.getPermissionId() == null) {
+                    continue;
+                }
+                String effect = sp.getEffect() == null ? "" : sp.getEffect().toUpperCase(Locale.ROOT);
+                if ("DENY".equals(effect)) {
+                    permissionIds.remove(sp.getPermissionId());
+                } else if ("ALLOW".equals(effect)) {
+                    permissionIds.add(sp.getPermissionId());
+                }
+            }
         }
 
         List<PermissionDTO> permissions = new ArrayList<>();
@@ -118,7 +129,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
     }
 
     @Override
-    public SubscriptionUserDTO addSpecialPermissions(Long subscriptionId, Long userId, PermissionUpdateDTO update) {
+    public SubscriptionUserDTO upsertSpecialPermissions(Long subscriptionId, Long userId, List<SpecialPermissionDTO> permissions) {
         SubscriptionUserEntity subscriptionUser = subscriptionUserRepository
                 .findBySubscriptionIdAndUserId(subscriptionId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("SubscriptionUserEntity not found"));
@@ -126,69 +137,115 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new IllegalArgumentException("SubscriptionEntity not found"));
 
-        List<Long> incoming = update == null ? List.of() : update.permissionIds();
-        List<Long> validated = validatePermissions(subscription, incoming);
+        RoleEntity role = roleRepository.findById(subscriptionUser.getRoleId())
+                .orElseThrow(() -> new IllegalArgumentException("RoleEntity not found"));
 
-        Set<Long> merged = new HashSet<>();
-        if (subscriptionUser.getSpecialPermissionList() != null) {
-            merged.addAll(subscriptionUser.getSpecialPermissionList());
-        }
-        merged.addAll(validated);
+        Set<Long> defaultPermissions = loadDefaultPermissions(role.getId());
 
-        subscriptionUser.setSpecialPermissionList(new ArrayList<>(merged));
-        SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
-
-        return new SubscriptionUserDTO(
-                saved.getId(),
-                saved.getSubscriptionId(),
-                saved.getUserId(),
-                saved.getRoleId(),
-                saved.getStatus(),
-                saved.getSpecialPermissionList()
+        List<SpecialPermissionEntity> updated = applySpecialPermissionUpserts(
+                subscription,
+                defaultPermissions,
+                subscriptionUser.getSpecialPermissions() == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(subscriptionUser.getSpecialPermissions()),
+                permissions
         );
+
+        subscriptionUser.setSpecialPermissions(updated);
+        SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
+        return toDTO(saved);
     }
 
-    @Override
-    public SubscriptionUserDTO removeSpecialPermissions(Long subscriptionId, Long userId, PermissionUpdateDTO update) {
-        SubscriptionUserEntity subscriptionUser = subscriptionUserRepository
-                .findBySubscriptionIdAndUserId(subscriptionId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("SubscriptionUserEntity not found"));
-
-        List<Long> current = subscriptionUser.getSpecialPermissionList() == null
-                ? new ArrayList<>()
-                : new ArrayList<>(subscriptionUser.getSpecialPermissionList());
-        List<Long> toRemove = update == null ? List.of() : update.permissionIds();
-
-        current.removeAll(toRemove);
-        subscriptionUser.setSpecialPermissionList(current);
-        SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
-
-        return new SubscriptionUserDTO(
-                saved.getId(),
-                saved.getSubscriptionId(),
-                saved.getUserId(),
-                saved.getRoleId(),
-                saved.getStatus(),
-                saved.getSpecialPermissionList()
-        );
+    private Set<Long> loadDefaultPermissions(Long roleId) {
+        Set<Long> defaults = new HashSet<>();
+        for (ServiceRolePermissionEntity mapping : serviceRolePermissionRepository.findByRoleId(roleId)) {
+            defaults.add(mapping.getPermissionId());
+        }
+        return defaults;
     }
 
-    private List<Long> validatePermissions(SubscriptionEntity subscription, List<Long> permissionIds) {
-        List<Long> validated = new ArrayList<>();
-        if (permissionIds == null) {
-            return validated;
-        }
-        for (Long permissionId : permissionIds) {
-            if (permissionId == null) {
+    private List<SpecialPermissionEntity> applySpecialPermissionUpserts(
+            SubscriptionEntity subscription,
+            Set<Long> defaultPermissions,
+            List<SpecialPermissionEntity> current,
+            List<SpecialPermissionDTO> incoming
+    ) {
+        for (SpecialPermissionDTO dto : incoming == null ? List.<SpecialPermissionDTO>of() : incoming) {
+            if (dto == null || dto.permissionId() == null || dto.effect() == null) {
                 continue;
             }
-            PermissionEntity permission = permissionRepository.findById(permissionId)
+
+            PermissionEntity permission = permissionRepository.findById(dto.permissionId())
                     .orElseThrow(() -> new IllegalArgumentException("PermissionEntity not found"));
             if (!permission.getServiceId().equals(subscription.getServiceId())) {
                 throw new IllegalArgumentException("PermissionEntity does not belong to the subscription service");
             }
-            validated.add(permission.getId());
+
+            String effect = dto.effect().toUpperCase(Locale.ROOT);
+            boolean isDefault = defaultPermissions.contains(permission.getId());
+
+            SpecialPermissionEntity existing = current.stream()
+                    .filter(sp -> permission.getId().equals(sp.getPermissionId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (isDefault) {
+                handleDefaultPermissionUpsert(current, effect, existing, permission);
+            } else {
+                handleNonDefaultPermissionUpsert(current, effect, existing, permission);
+            }
         }
-        return validated;
+        return current;
+    }
+
+    private static void handleNonDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String effect, SpecialPermissionEntity existing, PermissionEntity permission) {
+        if ("ALLOW".equals(effect)) {
+            if (existing == null) {
+                SpecialPermissionEntity sp = new SpecialPermissionEntity();
+                sp.setPermissionId(permission.getId());
+                sp.setEffect("ALLOW");
+                current.add(sp);
+            }
+        } else if ("DENY".equals(effect)) {
+            if (existing != null) {
+                current.remove(existing);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid effect: " + effect);
+        }
+    }
+
+    private static void handleDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String effect, SpecialPermissionEntity existing, PermissionEntity permission) {
+        if ("DENY".equals(effect)) {
+            if (existing == null) {
+                SpecialPermissionEntity sp = new SpecialPermissionEntity();
+                sp.setPermissionId(permission.getId());
+                sp.setEffect("DENY");
+                current.add(sp);
+            }
+        } else if ("ALLOW".equals(effect)) {
+            if (existing != null) {
+                current.remove(existing);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid effect: " + effect);
+        }
+    }
+
+    private SubscriptionUserDTO toDTO(SubscriptionUserEntity saved) {
+        List<SpecialPermissionDTO> specials = new ArrayList<>();
+        if (saved.getSpecialPermissions() != null) {
+            for (SpecialPermissionEntity sp : saved.getSpecialPermissions()) {
+                specials.add(new SpecialPermissionDTO(sp.getPermissionId(), sp.getEffect()));
+            }
+        }
+        return new SubscriptionUserDTO(
+                saved.getId(),
+                saved.getSubscriptionId(),
+                saved.getUserId(),
+                saved.getRoleId(),
+                saved.getStatus(),
+                specials
+        );
     }
 }

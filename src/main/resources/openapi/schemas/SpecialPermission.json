@@ -1,0 +1,15 @@
+{
+  "title": "SpecialPermission",
+  "type": "object",
+  "properties": {
+    "permissionId": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "effect": {
+      "type": "string",
+      "enum": ["ALLOW", "DENY"]
+    }
+  },
+  "required": ["permissionId", "effect"]
+}

@@ -17,7 +17,8 @@ flowchart LR
   U --> SU
   R --> SU
 
-  SU --> PL[PermissionIds List]
+  SU --> SP["SpecialPermissions (Allow/Deny)"]
+  P --> SP
 ```
 
 ## EER Diagram
@@ -65,7 +66,13 @@ erDiagram
     uuid user_id FK
     uuid role_id FK
     string status
-    text specialPermissionList
+  }
+
+  SPECIAL_PERMISSIONS {
+    uuid id PK
+    uuid subscription_user_id FK
+    uuid permission_id FK
+    string effect
   }
 
   USERS ||--o{ SUBSCRIPTIONS : owns
@@ -80,6 +87,9 @@ erDiagram
   SUBSCRIPTIONS ||--o{ SUBSCRIPTION_USERS : assigns
   USERS ||--o{ SUBSCRIPTION_USERS : member
   ROLES ||--o{ SUBSCRIPTION_USERS : role_per_service
+
+  SUBSCRIPTION_USERS ||--o{ SPECIAL_PERMISSIONS : overrides
+  PERMISSIONS ||--o{ SPECIAL_PERMISSIONS : scoped
 ```
 
 ## Sample Data (Illustrative)
@@ -150,8 +160,16 @@ erDiagram
 
 **Subscription Users**
 
-| id | subscription_id | user_id | role_id | specialPermissionList |
-| --- | --- | --- | --- | --- |
-| subu_shyam_ec2 | sub_ec2_umesh | u_shyam | role_ec2_admin | [] |
-| subu_shyam_cass | sub_cass_umesh | u_shyam | role_cass_user | [] |
-| subu_raju_ec2 | sub_ec2_umesh | u_raju | role_ec2_user | [perm_ec2_start, perm_ec2_stop] |
+| id | subscription_id | user_id | role_id |
+| --- | --- | --- | --- |
+| subu_shyam_ec2 | sub_ec2_umesh | u_shyam | role_ec2_admin |
+| subu_shyam_cass | sub_cass_umesh | u_shyam | role_cass_admin |
+| subu_raju_ec2 | sub_ec2_umesh | u_raju | role_ec2_user |
+
+**Special Permissions (Overrides)**
+
+| id | subscription_user_id | permission_id | effect |
+| --- | --- | --- | --- |
+| sp1 | subu_raju_ec2 | perm_ec2_start | ALLOW |
+| sp2 | subu_raju_ec2 | perm_ec2_stop | ALLOW |
+| sp3 | subu_shyam_cass | perm_cass_drop_schema | DENY |

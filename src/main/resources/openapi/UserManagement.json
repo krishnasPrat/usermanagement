@@ -155,9 +155,9 @@
         }
       }
     },
-    "/subscription-user/subscription/{subscriptionId}/user/{userId}/permissions/add": {
+    "/subscription-user/subscription/{subscriptionId}/user/{userId}/special-permissions": {
       "post": {
-        "summary": "Add special permissions for a subscription user",
+        "summary": "Upsert special permissions for a subscription user",
         "parameters": [
           {
             "name": "subscriptionId",
@@ -183,54 +183,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "./schemas/PermissionUpdate.json"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "./schemas/SubscriptionUser.json"
+                "type": "array",
+                "items": {
+                  "$ref": "./schemas/SpecialPermission.json"
                 }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/subscription-user/subscription/{subscriptionId}/user/{userId}/permissions/remove": {
-      "post": {
-        "summary": "Remove special permissions for a subscription user",
-        "parameters": [
-          {
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "./schemas/PermissionUpdate.json"
               }
             }
           }
@@ -264,11 +220,11 @@
       "SubscriptionUser": {
         "$ref": "./schemas/SubscriptionUser.json"
       },
+      "SpecialPermission": {
+        "$ref": "./schemas/SpecialPermission.json"
+      },
       "PermissionList": {
         "$ref": "./schemas/PermissionList.json"
-      },
-      "PermissionUpdate": {
-        "$ref": "./schemas/PermissionUpdate.json"
       },
       "Role": {
         "$ref": "./schemas/Role.json"

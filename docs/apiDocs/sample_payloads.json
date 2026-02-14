@@ -170,21 +170,27 @@
         "userId": 2,
         "roleId": 1,
         "status": "ACTIVE",
-        "specialPermissionList": []
+        "specialPermissions": []
       },
       "Shyam-Cassandra-User": {
         "subscriptionId": 2,
         "userId": 2,
         "roleId": 4,
         "status": "ACTIVE",
-        "specialPermissionList": []
+        "specialPermissions": []
       },
       "Raju-EC2-User-Special": {
         "subscriptionId": 1,
         "userId": 3,
         "roleId": 2,
         "status": "ACTIVE",
-        "specialPermissionList": []
+        "specialPermission": [],
+        "specialPermissions": [
+          {
+            "permissionId": 3,
+            "effect": "ALLOW"
+          }
+        ]
       }
     }
   }

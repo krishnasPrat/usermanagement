@@ -280,7 +280,7 @@
               "raw": "{\n  \"subscriptionId\": 2,\n  \"userId\": 2,\n  \"roleId\": 4,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": []\n}"
             },
             "url": {
-              "raw": "http://localhost:9150/user-management/api/user",
+              "raw": "http://localhost:9150/user-management/api/subscription-user",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -307,7 +307,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": []\n}"
+              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissions\": [\n    {\n      \"permissionId\": 3,\n      \"effect\": \"ALLOW\"\n    }\n  ]\n}"
             },
             "url": {
               "raw": "http://localhost:9150/user-management/api/subscription-user",
@@ -357,7 +357,7 @@
           "response": []
         },
         {
-          "name": "Raju-EC2-Add-Special",
+          "name": "Raju-EC2-manage-permissions",
           "request": {
             "method": "POST",
             "header": [
@@ -368,7 +368,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"permissionIds\": [\n    3\n  ]\n}"
+              "raw": "[\n  {\"permissionId\": 3, \"effect\": \"ALLOW\"}\n]"
             },
             "url": {
               "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions/add",
@@ -389,44 +389,7 @@
                 "add"
               ]
             }
-          },
-          "response": []
-        },
-        {
-          "name": "Raju-EC2-Remove-Special",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"permissionIds\": [\n    3\n  ]\n}"
-            },
-            "url": {
-              "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions/remove",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "9150",
-              "path": [
-                "user-management",
-                "api",
-                "subscription-user",
-                "subscription",
-                "1",
-                "user",
-                "3",
-                "permissions",
-                "remove"
-              ]
-            }
-          },
-          "response": []
+          }
         }
       ]
     }
