@@ -69,7 +69,11 @@
 			<artifactId>visual-jpa-core</artifactId>
 			<version>0.1.0-SNAPSHOT</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

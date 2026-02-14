@@ -77,13 +77,12 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         entity.setRoleId(subscriptionUser.roleId());
         entity.setStatus(subscriptionUser.status());
 
-        List<SpecialPermissionEntity> specialPermissions = applySpecialPermissionUpserts(
-                subscription,
-                defaultPermissions,
-                new ArrayList<>(),
-                subscriptionUser.specialPermissions()
-        );
-        entity.setSpecialPermissions(specialPermissions);
+        List<SpecialPermissionEntity> current = entity.getSpecialPermissions();
+        if (current == null) {
+            current = new ArrayList<>();
+            entity.setSpecialPermissions(current);
+        }
+        applySpecialPermissionUpserts(subscription, defaultPermissions, current, subscriptionUser.specialPermissions());
 
         SubscriptionUserEntity saved = subscriptionUserRepository.save(entity);
 
@@ -142,16 +141,14 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
 
         Set<Long> defaultPermissions = loadDefaultPermissions(role.getId());
 
-        List<SpecialPermissionEntity> updated = applySpecialPermissionUpserts(
-                subscription,
-                defaultPermissions,
-                subscriptionUser.getSpecialPermissions() == null
-                        ? new ArrayList<>()
-                        : new ArrayList<>(subscriptionUser.getSpecialPermissions()),
-                permissions
-        );
+        List<SpecialPermissionEntity> current = subscriptionUser.getSpecialPermissions();
+        if (current == null) {
+            current = new ArrayList<>();
+            subscriptionUser.setSpecialPermissions(current);
+        }
 
-        subscriptionUser.setSpecialPermissions(updated);
+        applySpecialPermissionUpserts(subscription, defaultPermissions, current, permissions);
+
         SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
         return toDTO(saved);
     }
@@ -164,7 +161,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         return defaults;
     }
 
-    private List<SpecialPermissionEntity> applySpecialPermissionUpserts(
+    private void applySpecialPermissionUpserts(
             SubscriptionEntity subscription,
             Set<Long> defaultPermissions,
             List<SpecialPermissionEntity> current,
@@ -195,27 +192,14 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
                 handleNonDefaultPermissionUpsert(current, access, existing, permission);
             }
         }
-        return current;
     }
 
-    private static void handleNonDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String access, SpecialPermissionEntity existing, PermissionEntity permission) {
-        if ("ALLOWED".equals(access)) {
-            if (existing == null) {
-                SpecialPermissionEntity sp = new SpecialPermissionEntity();
-                sp.setPermissionId(permission.getId());
-                sp.setAccess("ALLOWED");
-                current.add(sp);
-            }
-        } else if ("DENIED".equals(access)) {
-            if (existing != null) {
-                current.remove(existing);
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid access: " + access);
-        }
-    }
-
-    private static void handleDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String access, SpecialPermissionEntity existing, PermissionEntity permission) {
+    private static void handleDefaultPermissionUpsert(
+            List<SpecialPermissionEntity> current,
+            String access,
+            SpecialPermissionEntity existing,
+            PermissionEntity permission
+    ) {
         if ("DENIED".equals(access)) {
             if (existing == null) {
                 SpecialPermissionEntity sp = new SpecialPermissionEntity();
@@ -224,6 +208,28 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
                 current.add(sp);
             }
         } else if ("ALLOWED".equals(access)) {
+            if (existing != null) {
+                current.remove(existing);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid access: " + access);
+        }
+    }
+
+    private static void handleNonDefaultPermissionUpsert(
+            List<SpecialPermissionEntity> current,
+            String access,
+            SpecialPermissionEntity existing,
+            PermissionEntity permission
+    ) {
+        if ("ALLOWED".equals(access)) {
+            if (existing == null) {
+                SpecialPermissionEntity sp = new SpecialPermissionEntity();
+                sp.setPermissionId(permission.getId());
+                sp.setAccess("ALLOWED");
+                current.add(sp);
+            }
+        } else if ("DENIED".equals(access)) {
             if (existing != null) {
                 current.remove(existing);
             }

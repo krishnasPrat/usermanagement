@@ -164,6 +164,21 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Find-Service-By-Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/service?name=EC2"
+            }
+          }
         }
       ]
     },

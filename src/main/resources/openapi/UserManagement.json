@@ -34,7 +34,11 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "User"
+        ],
+        "description": "Create user"
       }
     },
     "/service": {
@@ -61,7 +65,43 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Service"
+        ],
+        "description": "Create service"
+      },
+      "get": {
+        "summary": "Find services by exact name (case-sensitive)",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/Service.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Service"
+        ],
+        "description": "Find services by exact name (case-sensitive)"
       }
     },
     "/subscription": {
@@ -88,7 +128,11 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Subscription"
+        ],
+        "description": "Create subscription"
       }
     },
     "/subscription-user": {
@@ -115,7 +159,11 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "SubscriptionUser"
+        ],
+        "description": "Create subscription user"
       }
     },
     "/subscription-user/subscription/{subscriptionId}/user/{userId}/permissions": {
@@ -152,7 +200,11 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "SubscriptionUser"
+        ],
+        "description": "Get effective permissions for a subscription user"
       }
     },
     "/subscription-user/subscription/{subscriptionId}/user/{userId}/special-permissions": {
@@ -202,7 +254,46 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "SubscriptionUser"
+        ],
+        "description": "Upsert special permissions for a subscription user"
+      }
+    },
+    "/user/{userId}/permissions": {
+      "get": {
+        "summary": "Get all permissions for a user across subscriptions",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/UserPermission.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "description": "Get all permissions for a user across subscriptions"
       }
     }
   },
@@ -234,6 +325,9 @@
       },
       "RolePermissionMapping": {
         "$ref": "./schemas/RolePermissionMapping.json"
+      },
+      "UserPermission": {
+        "$ref": "./schemas/UserPermission.json"
       }
     }
   }

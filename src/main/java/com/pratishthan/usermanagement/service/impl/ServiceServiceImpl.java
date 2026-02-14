@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +22,11 @@ public class ServiceServiceImpl implements ServiceService {
     private final RolePermissionService rolePermissionService;
     private final ServiceMapper serviceMapper;
 
-    public ServiceServiceImpl(ServiceRepository serviceRepository, RolePermissionService rolePermissionService, ServiceMapper serviceMapper) {
+    public ServiceServiceImpl(
+            ServiceRepository serviceRepository,
+            RolePermissionService rolePermissionService,
+            ServiceMapper serviceMapper
+    ) {
         this.serviceRepository = serviceRepository;
         this.rolePermissionService = rolePermissionService;
         this.serviceMapper = serviceMapper;
@@ -37,89 +40,83 @@ public class ServiceServiceImpl implements ServiceService {
         Map<String, RoleDTO> rolesByName = new HashMap<>();
         if (service.roles() != null) {
             for (RoleDTO role : service.roles()) {
-                persistRoles(role, savedService, savedRoles, rolesByName);
+                RoleDTO roleWithService = new RoleDTO(
+                        role.id(),
+                        savedService.getId(),
+                        role.name(),
+                        role.description()
+                );
+                RoleDTO savedRole = rolePermissionService.createRole(roleWithService);
+                savedRoles.add(savedRole);
+                if (savedRole.name() != null) {
+                    rolesByName.put(savedRole.name(), savedRole);
+                }
             }
         }
 
         List<PermissionDTO> savedPermissions = new ArrayList<>();
         Map<String, PermissionDTO> permissionsByName = new HashMap<>();
         if (service.permissions() != null) {
-            persistPermissions(service, savedService, savedPermissions, permissionsByName);
+            for (PermissionDTO permission : service.permissions()) {
+                PermissionDTO permissionWithService = new PermissionDTO(
+                        permission.id(),
+                        savedService.getId(),
+                        permission.name(),
+                        permission.description()
+                );
+                PermissionDTO savedPermission = rolePermissionService.createPermission(permissionWithService);
+                savedPermissions.add(savedPermission);
+                if (savedPermission.name() != null) {
+                    permissionsByName.put(savedPermission.name(), savedPermission);
+                }
+            }
         }
 
         List<RolePermissionMappingDTO> savedMappings = new ArrayList<>();
         if (service.rolePermissionMappings() != null) {
             for (RolePermissionMappingDTO mapping : service.rolePermissionMappings()) {
-                persistRolePermissionMappings(mapping, rolesByName, permissionsByName, savedMappings);
+                Long roleId = mapping.roleId();
+                Long permissionId = mapping.permissionId();
+                String roleName = mapping.roleName();
+                String permissionName = mapping.permissionName();
+
+                if (roleId == null && roleName != null) {
+                    RoleDTO role = rolesByName.get(roleName);
+                    if (role != null) {
+                        roleId = role.id();
+                        roleName = role.name();
+                    }
+                }
+                if (permissionId == null && permissionName != null) {
+                    PermissionDTO permission = permissionsByName.get(permissionName);
+                    if (permission != null) {
+                        permissionId = permission.id();
+                        permissionName = permission.name();
+                    }
+                }
+
+                RolePermissionMappingDTO toCreate = new RolePermissionMappingDTO(
+                        roleId,
+                        permissionId,
+                        roleName,
+                        permissionName
+                );
+
+                RolePermissionMappingDTO savedMapping = rolePermissionService.createRolePermissionMapping(toCreate);
+                savedMappings.add(savedMapping);
             }
         }
 
         return serviceMapper.toDTO(savedService, savedRoles, savedPermissions, savedMappings);
     }
 
-    private void persistPermissions(ServiceDTO service, ServiceEntity savedService, List<PermissionDTO> savedPermissions, Map<String, PermissionDTO> permissionsByName) {
-        for (PermissionDTO permission : service.permissions()) {
-            PermissionDTO permissionWithService = new PermissionDTO(
-                    permission.id(),
-                    savedService.getId(),
-                    permission.name(),
-                    permission.description()
-            );
-            PermissionDTO savedPermission = rolePermissionService.createPermission(permissionWithService);
-            savedPermissions.add(savedPermission);
-            if (savedPermission.name() != null) {
-                permissionsByName.put(savedPermission.name(), savedPermission);
-            }
+    @Override
+    public List<ServiceDTO> findByName(String name) {
+        List<ServiceEntity> services = serviceRepository.findByName(name);
+        List<ServiceDTO> result = new ArrayList<>();
+        for (ServiceEntity service : services) {
+            result.add(serviceMapper.toDTO(service, null, null, null));
         }
+        return result;
     }
-
-    private void persistRoles(RoleDTO role, ServiceEntity savedService, List<RoleDTO> savedRoles, Map<String, RoleDTO> rolesByName) {
-        RoleDTO roleWithService = new RoleDTO(
-                role.id(),
-                savedService.getId(),
-                role.name(),
-                role.description()
-        );
-        RoleDTO savedRole = rolePermissionService.createRole(roleWithService);
-        savedRoles.add(savedRole);
-        if (savedRole.name() != null) {
-            rolesByName.put(savedRole.name(), savedRole);
-        }
-    }
-
-    private void persistRolePermissionMappings(
-            RolePermissionMappingDTO mapping,
-            Map<String, RoleDTO> rolesByName,
-            Map<String, PermissionDTO> permissionsByName,
-            List<RolePermissionMappingDTO> savedMappings
-    ) {
-        Long roleId = 0L;
-        Long permissionId = 0L;
-        String roleName = mapping.roleName();
-        String permissionName = mapping.permissionName();
-
-        RoleDTO role = rolesByName.get(roleName);
-        if (role != null) {
-            roleId = role.id();
-            roleName = role.name();
-        }
-
-        PermissionDTO permission = permissionsByName.get(permissionName);
-        if (permission != null) {
-            permissionId = permission.id();
-            permissionName = permission.name();
-        }
-
-
-        RolePermissionMappingDTO toCreate = new RolePermissionMappingDTO(
-                roleId,
-                permissionId,
-                roleName,
-                permissionName
-        );
-
-        RolePermissionMappingDTO savedMapping = rolePermissionService.createRolePermissionMapping(toCreate);
-        savedMappings.add(savedMapping);
-    }
-
 }
