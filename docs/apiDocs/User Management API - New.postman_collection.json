@@ -307,7 +307,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissions\": [\n    {\n      \"permissionId\": 3,\n      \"effect\": \"ALLOW\"\n    }\n  ]\n}"
+              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissions\": [\n    {\n      \"permissionId\": 3,\n      \"access\": \"ALLOWED\"\n    }\n  ]\n}"
             },
             "url": {
               "raw": "http://localhost:9150/user-management/api/subscription-user",
@@ -368,7 +368,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\"permissionId\": 3, \"effect\": \"ALLOW\"}\n]"
+              "raw": "[\n  {\"permissionId\": 3, \"access\": \"ALLOWED\"}\n]"
             },
             "url": {
               "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions/add",

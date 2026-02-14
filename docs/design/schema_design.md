@@ -72,7 +72,7 @@ erDiagram
     uuid id PK
     uuid subscription_user_id FK
     uuid permission_id FK
-    string effect
+    string access
   }
 
   USERS ||--o{ SUBSCRIPTIONS : owns
@@ -168,8 +168,8 @@ erDiagram
 
 **Special Permissions (Overrides)**
 
-| id | subscription_user_id | permission_id | effect |
+| id | subscription_user_id | permission_id | access |
 | --- | --- | --- | --- |
-| sp1 | subu_raju_ec2 | perm_ec2_start | ALLOW |
-| sp2 | subu_raju_ec2 | perm_ec2_stop | ALLOW |
-| sp3 | subu_shyam_cass | perm_cass_drop_schema | DENY |
+| sp1 | subu_raju_ec2 | perm_ec2_start | ALLOWED |
+| sp2 | subu_raju_ec2 | perm_ec2_stop | ALLOWED |
+| sp3 | subu_shyam_cass | perm_cass_drop_schema | DENIED |

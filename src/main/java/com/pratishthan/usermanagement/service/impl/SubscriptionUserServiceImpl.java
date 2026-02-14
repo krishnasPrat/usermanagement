@@ -108,10 +108,10 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
                 if (sp.getPermissionId() == null) {
                     continue;
                 }
-                String effect = sp.getEffect() == null ? "" : sp.getEffect().toUpperCase(Locale.ROOT);
-                if ("DENY".equals(effect)) {
+                String access = sp.getAccess() == null ? "" : sp.getAccess().toUpperCase(Locale.ROOT);
+                if ("DENIED".equals(access)) {
                     permissionIds.remove(sp.getPermissionId());
-                } else if ("ALLOW".equals(effect)) {
+                } else if ("ALLOWED".equals(access)) {
                     permissionIds.add(sp.getPermissionId());
                 }
             }
@@ -171,7 +171,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
             List<SpecialPermissionDTO> incoming
     ) {
         for (SpecialPermissionDTO dto : incoming == null ? List.<SpecialPermissionDTO>of() : incoming) {
-            if (dto == null || dto.permissionId() == null || dto.effect() == null) {
+            if (dto == null || dto.permissionId() == null || dto.access() == null) {
                 continue;
             }
 
@@ -181,7 +181,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
                 throw new IllegalArgumentException("PermissionEntity does not belong to the subscription service");
             }
 
-            String effect = dto.effect().toUpperCase(Locale.ROOT);
+            String access = dto.access().toUpperCase(Locale.ROOT);
             boolean isDefault = defaultPermissions.contains(permission.getId());
 
             SpecialPermissionEntity existing = current.stream()
@@ -190,45 +190,45 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
                     .orElse(null);
 
             if (isDefault) {
-                handleDefaultPermissionUpsert(current, effect, existing, permission);
+                handleDefaultPermissionUpsert(current, access, existing, permission);
             } else {
-                handleNonDefaultPermissionUpsert(current, effect, existing, permission);
+                handleNonDefaultPermissionUpsert(current, access, existing, permission);
             }
         }
         return current;
     }
 
-    private static void handleNonDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String effect, SpecialPermissionEntity existing, PermissionEntity permission) {
-        if ("ALLOW".equals(effect)) {
+    private static void handleNonDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String access, SpecialPermissionEntity existing, PermissionEntity permission) {
+        if ("ALLOWED".equals(access)) {
             if (existing == null) {
                 SpecialPermissionEntity sp = new SpecialPermissionEntity();
                 sp.setPermissionId(permission.getId());
-                sp.setEffect("ALLOW");
+                sp.setAccess("ALLOWED");
                 current.add(sp);
             }
-        } else if ("DENY".equals(effect)) {
+        } else if ("DENIED".equals(access)) {
             if (existing != null) {
                 current.remove(existing);
             }
         } else {
-            throw new IllegalArgumentException("Invalid effect: " + effect);
+            throw new IllegalArgumentException("Invalid access: " + access);
         }
     }
 
-    private static void handleDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String effect, SpecialPermissionEntity existing, PermissionEntity permission) {
-        if ("DENY".equals(effect)) {
+    private static void handleDefaultPermissionUpsert(List<SpecialPermissionEntity> current, String access, SpecialPermissionEntity existing, PermissionEntity permission) {
+        if ("DENIED".equals(access)) {
             if (existing == null) {
                 SpecialPermissionEntity sp = new SpecialPermissionEntity();
                 sp.setPermissionId(permission.getId());
-                sp.setEffect("DENY");
+                sp.setAccess("DENIED");
                 current.add(sp);
             }
-        } else if ("ALLOW".equals(effect)) {
+        } else if ("ALLOWED".equals(access)) {
             if (existing != null) {
                 current.remove(existing);
             }
         } else {
-            throw new IllegalArgumentException("Invalid effect: " + effect);
+            throw new IllegalArgumentException("Invalid access: " + access);
         }
     }
 
@@ -236,7 +236,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         List<SpecialPermissionDTO> specials = new ArrayList<>();
         if (saved.getSpecialPermissions() != null) {
             for (SpecialPermissionEntity sp : saved.getSpecialPermissions()) {
-                specials.add(new SpecialPermissionDTO(sp.getPermissionId(), sp.getEffect()));
+                specials.add(new SpecialPermissionDTO(sp.getPermissionId(), sp.getAccess()));
             }
         }
         return new SubscriptionUserDTO(

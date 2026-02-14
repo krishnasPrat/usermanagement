@@ -23,7 +23,7 @@ public class SpecialPermissionEntity {
     private Long permissionId;
 
     @Column(nullable = false)
-    private String effect;
+    private String access;
 
     public Long getId() {
         return id;
@@ -41,11 +41,11 @@ public class SpecialPermissionEntity {
         this.permissionId = permissionId;
     }
 
-    public String getEffect() {
-        return effect;
+    public String getAccess() {
+        return access;
     }
 
-    public void setEffect(String effect) {
-        this.effect = effect;
+    public void setAccess(String access) {
+        this.access = access;
     }
 }

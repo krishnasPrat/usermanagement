@@ -188,7 +188,7 @@
         "specialPermissions": [
           {
             "permissionId": 3,
-            "effect": "ALLOW"
+            "access": "ALLOWED"
           }
         ]
       }

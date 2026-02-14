@@ -6,10 +6,10 @@
       "type": "integer",
       "format": "int64"
     },
-    "effect": {
+    "access": {
       "type": "string",
-      "enum": ["ALLOW", "DENY"]
+      "enum": ["ALLOWED", "DENIED"]
     }
   },
-  "required": ["permissionId", "effect"]
+  "required": ["permissionId", "access"]
 }
