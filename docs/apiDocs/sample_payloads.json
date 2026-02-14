@@ -184,10 +184,7 @@
         "userId": 3,
         "roleId": 2,
         "status": "ACTIVE",
-        "specialPermissionList": [
-          1,
-          2
-        ]
+        "specialPermissionList": []
       }
     }
   }

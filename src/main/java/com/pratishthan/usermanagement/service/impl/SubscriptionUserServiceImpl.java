@@ -2,6 +2,7 @@ package com.pratishthan.usermanagement.service.impl;
 
 import com.pratishthan.usermanagement.dto.PermissionDTO;
 import com.pratishthan.usermanagement.dto.PermissionListDTO;
+import com.pratishthan.usermanagement.dto.PermissionUpdateDTO;
 import com.pratishthan.usermanagement.dto.SubscriptionUserDTO;
 import com.pratishthan.usermanagement.entity.PermissionEntity;
 import com.pratishthan.usermanagement.entity.RoleEntity;
@@ -68,20 +69,7 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
             throw new IllegalArgumentException("RoleEntity does not belong to the subscription service");
         }
 
-        List<Long> validatedPermissions = new ArrayList<>();
-        if (subscriptionUser.specialPermissionList() != null) {
-            for (Long permissionId : subscriptionUser.specialPermissionList()) {
-                if (permissionId == null) {
-                    continue;
-                }
-                PermissionEntity permission = permissionRepository.findById(permissionId)
-                        .orElseThrow(() -> new IllegalArgumentException("PermissionEntity not found"));
-                if (!permission.getServiceId().equals(subscription.getServiceId())) {
-                    throw new IllegalArgumentException("PermissionEntity does not belong to the subscription service");
-                }
-                validatedPermissions.add(permission.getId());
-            }
-        }
+        List<Long> validatedPermissions = validatePermissions(subscription, subscriptionUser.specialPermissionList());
 
         SubscriptionUserEntity entity = new SubscriptionUserEntity();
         entity.setSubscriptionId(subscriptionUser.subscriptionId());
@@ -127,5 +115,80 @@ public class SubscriptionUserServiceImpl implements SubscriptionUserService {
         }
 
         return new PermissionListDTO(permissions);
+    }
+
+    @Override
+    public SubscriptionUserDTO addSpecialPermissions(Long subscriptionId, Long userId, PermissionUpdateDTO update) {
+        SubscriptionUserEntity subscriptionUser = subscriptionUserRepository
+                .findBySubscriptionIdAndUserId(subscriptionId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("SubscriptionUserEntity not found"));
+
+        SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new IllegalArgumentException("SubscriptionEntity not found"));
+
+        List<Long> incoming = update == null ? List.of() : update.permissionIds();
+        List<Long> validated = validatePermissions(subscription, incoming);
+
+        Set<Long> merged = new HashSet<>();
+        if (subscriptionUser.getSpecialPermissionList() != null) {
+            merged.addAll(subscriptionUser.getSpecialPermissionList());
+        }
+        merged.addAll(validated);
+
+        subscriptionUser.setSpecialPermissionList(new ArrayList<>(merged));
+        SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
+
+        return new SubscriptionUserDTO(
+                saved.getId(),
+                saved.getSubscriptionId(),
+                saved.getUserId(),
+                saved.getRoleId(),
+                saved.getStatus(),
+                saved.getSpecialPermissionList()
+        );
+    }
+
+    @Override
+    public SubscriptionUserDTO removeSpecialPermissions(Long subscriptionId, Long userId, PermissionUpdateDTO update) {
+        SubscriptionUserEntity subscriptionUser = subscriptionUserRepository
+                .findBySubscriptionIdAndUserId(subscriptionId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("SubscriptionUserEntity not found"));
+
+        List<Long> current = subscriptionUser.getSpecialPermissionList() == null
+                ? new ArrayList<>()
+                : new ArrayList<>(subscriptionUser.getSpecialPermissionList());
+        List<Long> toRemove = update == null ? List.of() : update.permissionIds();
+
+        current.removeAll(toRemove);
+        subscriptionUser.setSpecialPermissionList(current);
+        SubscriptionUserEntity saved = subscriptionUserRepository.save(subscriptionUser);
+
+        return new SubscriptionUserDTO(
+                saved.getId(),
+                saved.getSubscriptionId(),
+                saved.getUserId(),
+                saved.getRoleId(),
+                saved.getStatus(),
+                saved.getSpecialPermissionList()
+        );
+    }
+
+    private List<Long> validatePermissions(SubscriptionEntity subscription, List<Long> permissionIds) {
+        List<Long> validated = new ArrayList<>();
+        if (permissionIds == null) {
+            return validated;
+        }
+        for (Long permissionId : permissionIds) {
+            if (permissionId == null) {
+                continue;
+            }
+            PermissionEntity permission = permissionRepository.findById(permissionId)
+                    .orElseThrow(() -> new IllegalArgumentException("PermissionEntity not found"));
+            if (!permission.getServiceId().equals(subscription.getServiceId())) {
+                throw new IllegalArgumentException("PermissionEntity does not belong to the subscription service");
+            }
+            validated.add(permission.getId());
+        }
+        return validated;
     }
 }

@@ -1,0 +1,434 @@
+{
+  "info": {
+    "_postman_id": "0ad31a95-dad4-439f-b395-21237c091bc0",
+    "name": "User Management API - New",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52358770",
+    "_collection_link": "https://go.postman.co/collection/52358770-0ad31a95-dad4-439f-b395-21237c091bc0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "Umesh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Umesh\",\n  \"email\": \"umesh@company.com\",\n  \"title\": \"CTO\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Shyam",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shyam\",\n  \"email\": \"shyam@company.com\",\n  \"title\": \"Team Lead\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raju",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Raju\",\n  \"email\": \"raju@company.com\",\n  \"title\": \"Junior Dev\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "service",
+      "item": [
+        {
+          "name": "EC2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"EC2\",\n  \"status\": \"ACTIVE\",\n  \"roles\": [\n    { \"name\": \"ADMIN\", \"description\": \"Full EC2 admin access\" },\n    { \"name\": \"USER\", \"description\": \"Limited EC2 access\" }\n  ],\n  \"permissions\": [\n    { \"name\": \"START_INSTANCE\", \"description\": \"Start EC2 instance\" },\n    { \"name\": \"STOP_INSTANCE\", \"description\": \"Stop EC2 instance\" },\n    { \"name\": \"SUDO_ACCESS\", \"description\": \"Privileged EC2 actions\" }\n  ],\n  \"rolePermissionMappings\": [\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"START_INSTANCE\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"STOP_INSTANCE\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"SUDO_ACCESS\" },\n    { \"roleName\": \"USER\", \"permissionName\": \"START_INSTANCE\" },\n    { \"roleName\": \"USER\", \"permissionName\": \"STOP_INSTANCE\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/service",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "service"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cassandra",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cassandra\",\n  \"status\": \"ACTIVE\",\n  \"roles\": [\n    { \"name\": \"ADMIN\", \"description\": \"Full Cassandra admin access\" },\n    { \"name\": \"USER\", \"description\": \"Cassandra DML/DQL only\" }\n  ],\n  \"permissions\": [\n    { \"name\": \"CREATE_SCHEMA\", \"description\": \"Create keyspace/schema\" },\n    { \"name\": \"DROP_SCHEMA\", \"description\": \"Drop keyspace/schema\" },\n    { \"name\": \"CREATE_TABLE\", \"description\": \"Create table\" },\n    { \"name\": \"DROP_TABLE\", \"description\": \"Drop table\" },\n    { \"name\": \"DML\", \"description\": \"Data manipulation\" },\n    { \"name\": \"DQL\", \"description\": \"Data query\" }\n  ],\n  \"rolePermissionMappings\": [\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"CREATE_SCHEMA\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"DROP_SCHEMA\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"CREATE_TABLE\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"DROP_TABLE\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"DML\" },\n    { \"roleName\": \"ADMIN\", \"permissionName\": \"DQL\" },\n    { \"roleName\": \"USER\", \"permissionName\": \"DML\" },\n    { \"roleName\": \"USER\", \"permissionName\": \"DQL\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/service",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "service"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "subscription",
+      "item": [
+        {
+          "name": "Umesh-EC2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"serviceId\": 1,\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Umesh-Cassandra",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"serviceId\": 2,\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "subscriptionUser",
+      "item": [
+        {
+          "name": "Shyam-EC2-Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 2,\n  \"roleId\": 1,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": []\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription-user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Shyam-Cassandra-User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriptionId\": 2,\n  \"userId\": 2,\n  \"roleId\": 4,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": []\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raju-EC2-User-Special",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": []\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription-user",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raju-EC2-Permissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user",
+                "subscription",
+                "1",
+                "user",
+                "3",
+                "permissions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raju-EC2-Add-Special",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissionIds\": [\n    3\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions/add",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user",
+                "subscription",
+                "1",
+                "user",
+                "3",
+                "permissions",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raju-EC2-Remove-Special",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissionIds\": [\n    3\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9150/user-management/api/subscription-user/subscription/1/user/3/permissions/remove",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user",
+                "subscription",
+                "1",
+                "user",
+                "3",
+                "permissions",
+                "remove"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
