@@ -1,0 +1,24 @@
+{
+  "title": "UserPermission",
+  "type": "object",
+  "properties": {
+    "subscriptionId": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "subscriptionOwnerName": {
+      "type": "string"
+    },
+    "serviceName": {
+      "type": "string"
+    },
+    "permissionName": {
+      "type": "string"
+    },
+    "access": {
+      "type": "string",
+      "enum": ["ALLOWED", "DENIED"]
+    }
+  },
+  "required": ["subscriptionId", "subscriptionOwnerName", "serviceName", "permissionName", "access"]
+}
