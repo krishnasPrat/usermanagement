@@ -1,0 +1,12 @@
+{
+  "title": "PermissionList",
+  "type": "object",
+  "properties": {
+    "permissions": {
+      "type": "array",
+      "items": {
+        "$ref": "./Permission.json"
+      }
+    }
+  }
+}
