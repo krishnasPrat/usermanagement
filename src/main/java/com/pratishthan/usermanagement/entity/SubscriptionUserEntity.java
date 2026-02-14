@@ -9,13 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.List;
+
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "subscription_users")
 @Data
 @NoArgsConstructor
+@Table(
+        name = "subscription_users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_subscription_user", columnNames = {"subscription_id","user_id"})
+        }
+)
 public class SubscriptionUserEntity {
 
     @Id

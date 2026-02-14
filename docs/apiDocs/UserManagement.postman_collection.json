@@ -311,6 +311,36 @@
               "raw": "{\n  \"subscriptionId\": 1,\n  \"userId\": 3,\n  \"roleId\": 2,\n  \"status\": \"ACTIVE\",\n  \"specialPermissionList\": [1, 2]\n}"
             }
           }
+        },
+        {
+          "name": "Raju-EC2-Permissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscription-user/subscription/1/user/3/permissions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9150",
+              "path": [
+                "user-management",
+                "api",
+                "subscription-user",
+                "subscription",
+                "1",
+                "user",
+                "3",
+                "permissions"
+              ]
+            }
+          }
         }
       ]
     }

@@ -117,6 +117,43 @@
           }
         }
       }
+    },
+    "/subscription-user/subscription/{subscriptionId}/user/{userId}/permissions": {
+      "get": {
+        "summary": "Get effective permissions for a subscription user",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/PermissionList.json"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -132,6 +169,9 @@
       },
       "SubscriptionUser": {
         "$ref": "./schemas/SubscriptionUser.json"
+      },
+      "PermissionList": {
+        "$ref": "./schemas/PermissionList.json"
       },
       "Role": {
         "$ref": "./schemas/Role.json"
