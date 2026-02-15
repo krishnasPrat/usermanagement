@@ -39,6 +39,38 @@
           "User"
         ],
         "description": "Create user"
+      },
+      "get": {
+        "summary": "Find users by exact name (case-sensitive)",
+        "description": "Find users by exact name (case-sensitive).",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/User.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
       }
     },
     "/service": {

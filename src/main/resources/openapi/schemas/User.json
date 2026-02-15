@@ -22,6 +22,10 @@
     "status": {
       "type": "string",
       "nullable": true
+    },
+    "creditCardNo": {
+      "type": "string",
+      "nullable": true
     }
   },
   "required": ["name", "email"]

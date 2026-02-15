@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserService {
     UserDTO createUser(UserDTO user);
     List<UserPermissionDTO> getUserPermissions(Long userId);
+    List<UserDTO> findByName(String name);
 }

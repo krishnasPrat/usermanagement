@@ -30,6 +30,9 @@ public class UserEntity {
 
     private String status;
 
+    @Column(name = "credit_card_no")
+    private String creditCardNo;
+
     public Long getId() {
         return id;
     }
@@ -68,5 +71,13 @@ public class UserEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCreditCardNo() {
+        return creditCardNo;
+    }
+
+    public void setCreditCardNo(String creditCardNo) {
+        this.creditCardNo = creditCardNo;
     }
 }

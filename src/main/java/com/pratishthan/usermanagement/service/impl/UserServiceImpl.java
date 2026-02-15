@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.pratishthan.usermanagement.util.CreditCardMasker;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +63,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserDTO user) {
         var entity = userMapper.toEntity(user);
         var saved = userRepository.save(entity);
+        saved.setCreditCardNo(CreditCardMasker.mask(saved.getCreditCardNo()));
         return userMapper.toDTO(saved);
     }
 
@@ -165,6 +168,16 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        return result;
+    }
+
+    @Override
+    public List<UserDTO> findByName(String name) {
+        List<UserEntity> users = userRepository.findByName(name);
+        List<UserDTO> result = new ArrayList<>();
+        for (UserEntity user : users) {
+            result.add(userMapper.toDTO(user));
+        }
         return result;
     }
 }
