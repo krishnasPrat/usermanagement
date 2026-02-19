@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UserManagementApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+      <env name="ENTITY_LOGS" value="$PROJECT_DIR$/../usermanagement/logs/vjpa-es.jsonl" />
+      <env name="SQL_LOGS" value="$PROJECT_DIR$/../usermanagement/logs/vjpa-sql.jsonl" />
+      <env name="TRANSACTION_LOGS" value="$PROJECT_DIR$/../usermanagement/logs/vjpa-trans.jsonl" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.pratishthan.usermanagement.UserManagementApplication" />
+    <module name="usermanagement" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.pratishthan.usermanagement.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
